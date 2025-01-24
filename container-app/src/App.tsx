@@ -1,8 +1,9 @@
-import React, { useState, lazy, Suspense } from 'react'
+import React, { useState, lazy,  } from 'react'
 import { useAppDispatch } from './hooks'
 import { addTask } from './tasksSlice'
 import TaskList from './components/TaskList'
 import { loadRemote } from '@module-federation/enhanced/runtime'
+import RemoteComponentWrapper from './components/RemoteComponentWrapper'
 
 // @ts-ignore
 const RemoteNewTaskPopup = lazy(() => loadRemote('remote/remote-app'))
@@ -23,12 +24,12 @@ const App: React.FC = () => {
       <TaskList />
 
       {showPopup && (
-        <Suspense fallback={<div>Loading Popup...</div>}>
+        <RemoteComponentWrapper>
           <RemoteNewTaskPopup
             onAddTask={handleAddTask}
             onClose={() => setShowPopup(false)}
           />
-        </Suspense>
+        </RemoteComponentWrapper>
       )}
     </div>
   )
