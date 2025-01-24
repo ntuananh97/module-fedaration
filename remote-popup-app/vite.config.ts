@@ -7,10 +7,11 @@ import { dependencies } from './package.json';
 export default defineConfig({
   plugins: [react(),
   federation({
-    name: "remote",
+    name: "remote1",
     filename: "remoteEntry.js",
     exposes: {
       "./remote-app": "./src/NewTaskPopup.tsx",
+      "./RemoteApp": "./src/RemoteApp.tsx",
     },
     shared: {
       react: { singleton: true, requiredVersion: dependencies.react },

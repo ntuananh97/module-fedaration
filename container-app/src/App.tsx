@@ -1,38 +1,59 @@
-import React, { useState, lazy,  } from 'react'
-import { useAppDispatch } from './hooks'
-import { addTask } from './tasksSlice'
-import TaskList from './components/TaskList'
-import { loadRemote } from '@module-federation/enhanced/runtime'
-import RemoteComponentWrapper from './components/RemoteComponentWrapper'
+import { lazy, useState } from "react";
+import { loadRemote } from "@module-federation/enhanced/runtime";
+import RemoteComponentWrapper from "./components/RemoteComponentWrapper";
 
-// @ts-ignore
-const RemoteNewTaskPopup = lazy(() => loadRemote('remote/remote-app'))
+const RemoteApp1 = lazy(() => loadRemote("remote1/RemoteApp"));
+const RemoteApp2 = lazy(() => loadRemote("remote2/RemoteApp"));
 
 const App: React.FC = () => {
-  const dispatch = useAppDispatch()
-  const [showPopup, setShowPopup] = useState(false)
+  const [selectedApps, setSelectedApps] = useState<string[]>([]);
 
-  const handleAddTask = (taskName: string) => {
-    dispatch(addTask(taskName))
-  }
+  const handleToggle = (appName: string) => {
+    setSelectedApps((prev) =>
+      prev.includes(appName) ? prev.filter((app) => app !== appName) : [...prev, appName]
+    );
+  };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h1>Todo List</h1>
-      <button onClick={() => setShowPopup(true)}>Create Task</button>
-
-      <TaskList />
-
-      {showPopup && (
-        <RemoteComponentWrapper>
-          <RemoteNewTaskPopup
-            onAddTask={handleAddTask}
-            onClose={() => setShowPopup(false)}
+    <div style={{ padding: "20px" }}>
+      <h2>Load Remote Apps Dynamically</h2>
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            value="remote1"
+            checked={selectedApps.includes("remote1")}
+            onChange={() => handleToggle("remote1")}
           />
-        </RemoteComponentWrapper>
-      )}
-    </div>
-  )
-}
+          Load Remote App 1
+        </label>
 
-export default App
+        <label>
+          <input
+            type="checkbox"
+            value="remote2"
+            checked={selectedApps.includes("remote2")}
+            onChange={() => handleToggle("remote2")}
+          />
+          Load Remote App 2
+        </label>
+      </div>
+
+      <div>
+        {selectedApps.includes("remote1") && (
+          <RemoteComponentWrapper fallback={<div>Loading Remote App 1...</div>}>
+            <RemoteApp1 />
+          </RemoteComponentWrapper>
+        )}
+
+        {selectedApps.includes("remote2") && (
+          <RemoteComponentWrapper fallback={<div>Loading Remote App 2...</div>}>
+            <RemoteApp2 />
+          </RemoteComponentWrapper>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default App;
