@@ -18,7 +18,14 @@ export default defineConfig({
       },
     })
   ],
+  build: {
+    target: 'esnext',
+    outDir: 'dist',
+    minify: false,
+  },
   server: {
-    port: 5002 // container port
-  }
+    port: 5002, // container port,
+    cors: true,
+  },
+  
 })

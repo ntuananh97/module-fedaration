@@ -7,6 +7,7 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(),
+    
     // federation({
     //   name: "host",
     //   remotes: {
@@ -26,4 +27,9 @@ export default defineConfig({
     //   },
     // }),
   ],
+  build: {
+    target: 'esnext',
+    outDir: 'dist',
+    minify: false,
+  },
 })

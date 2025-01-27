@@ -12,11 +12,13 @@ init({
     remotes: [
         {
             name: "remote1",
-            entry: "http://localhost:5001/remoteEntry.js",
+            entry: "/remotes/remote1/remoteEntry.js", // build
+            // entry: "http://localhost:5001/remoteEntry.js",
             type: "module"
         },
         {
             name: "remote2",
+            // entry: "/remotes/remote2/remoteEntry.js", // build
             entry: "http://localhost:5002/remoteEntry.js",
             type: "module"
         },
