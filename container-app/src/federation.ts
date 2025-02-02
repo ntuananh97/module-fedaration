@@ -3,6 +3,7 @@ import React from 'react';
 import ReactDOM from "react-dom";
 
 
+
 /**
  * Initialize remote modules at runtime.
  * This must happen BEFORE you do any dynamic import('remoteApp/...').
@@ -12,14 +13,14 @@ init({
     remotes: [
         {
             name: "remote1",
-            entry: "/remotes/remote1/remoteEntry.js", // build
-            // entry: "http://localhost:5001/remoteEntry.js",
+            // entry: "/remotes/remote1/remoteEntry.js", // build
+            entry: import.meta.env.VITE_REMOTE1_URL,
             type: "module"
         },
         {
             name: "remote2",
             // entry: "/remotes/remote2/remoteEntry.js", // build
-            entry: "http://localhost:5002/remoteEntry.js",
+            entry: import.meta.env.VITE_REMOTE2_URL,
             type: "module"
         },
     ],
