@@ -1,5 +1,5 @@
 import { lazy, useState, useEffect } from "react";
-import { loadRemote, init } from "@module-federation/enhanced/runtime";
+import { loadRemote, registerRemotes } from "@module-federation/enhanced/runtime";
 import RemoteComponentWrapper from "./components/RemoteComponentWrapper";
 import { fetchRemotesApi } from "./api";
 
@@ -26,31 +26,13 @@ const App: React.FC = () => {
         const data = await fetchRemotesApi();
         setRemotes(data);
 
-        // 🔹 Khởi tạo Module Federation sau khi fetch danh sách remote
-        init({
-          name: "host",
-          remotes: data.map(({ name, entry }) => ({ name, entry })),
-          shared: {
-            react: {
-              version: "18.2.0",
-              scope: "default",
-              lib: () => import("react"),
-              shareConfig: {
-                singleton: true,
-                requiredVersion: "^18.2.0",
-              },
-            },
-            "react-dom": {
-              version: "18.2.0",
-              scope: "default",
-              lib: () => import("react-dom"),
-              shareConfig: {
-                singleton: true,
-                requiredVersion: "^18.2.0",
-              },
-            },
-          },
-        });
+        const remotes = data.map(item => ({
+          name: item.name,
+          entry: item.entry,
+          type: "module"
+        }))
+        console.log("fetchRemotes ~ remotes:", remotes)
+        registerRemotes(remotes);
 
         // Đánh dấu là Federation đã khởi tạo
         setIsFederationInitialized(true);
